@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SELC Language College - Quote Calculator</title>
+    <style>
+        :root {
+            --primary: #0d6e83;
+            --secondary: #83c5d4;
+            --light: #e6f5f8;
+            --dark: #044958;
+            --accent: #f8f9fa;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-text {
+            margin-left: 10px;
+        }
+        
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+        
+        header p {
+            margin: 5px 0 0;
+            opacity: 0.9;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .checkbox-group {
+            margin-top: 10px;
+        }
+        
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .checkbox-container input {
+            width: auto;
+            margin-right: 10px;
+        }
+        
+        .checkbox-container label {
+            margin: 0;
+            font-weight: normal;
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--dark);
+        }
+        
+        .summary {
+            background-color: var(--light);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .summary h3 {
+            margin-top: 0;
+            color: var(--dark);
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .summary-total {
+            font-weight: 700;
+            font-size: 18px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid var(--secondary);
+        }
+        
+        .disclaimer {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+            margin-top: 20px;
+        }
+        
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <div class="logo-text">
+                <h1>SELC Language College</h1>
+                <p>ESL Program Quote Calculator</p>
+            </div>
+        </div>
+        <div>
+            <p>Q1 - 2025</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="two-columns">
+            <div>
+                <div class="form-group">
+                    <label for="program">Select Program:</label>
+                    <select id="program" onchange="updatePrices()">
+                        <option value="morning">Morning English (15 lessons/week)</option>
+                        <option value="semi">Semi-Intensive English (20 lessons/week)</option>
+                        <option value="intensive">Intensive English (25 lessons/week)</option>
+                        <option value="evening">Evening English (10 lessons/week)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="weeks">Program Duration (weeks):</label>
+                    <input type="number" id="weeks" min="1" value="4" onchange="updatePrices()">
+                    <small>Choose from 1 to 52 weeks</small>
+                </div>
+            </div>
+            
+            <div>
+                <div class="form-group">
+                    <label>Optional Services:</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="barista" onchange="updatePrices()">
+                            <label for="barista">Barista Elective (Fixed $80)</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button onclick="calculateTotal()">Calculate Total</button>
+        
+        <div class="summary" id="quoteSummary" style="display: none;">
+            <h3>Quote Summary</h3>
+            <div id="summaryContent">
+                <!-- This will be populated by JavaScript -->
+            </div>
+            <p class="disclaimer">* Promotional prices valid until March 30th, 2025. All prices in CAD.</p>
+            <p class="disclaimer">* ESL minimum age is 16 years old. Minimum of 2 weeks registration.</p>
+            <p class="disclaimer">* Note: All prices and fees are subject to change without notice.</p>
+        </div>
+    </div>
+    
+    <script>
+        // Program pricing data
+        const programPrices = {
+            morning: [320, 300, 280, 270],    // 1-4, 5-12, 13-24, 25+ weeks
+            semi: [360, 340, 320, 310],       // 1-4, 5-12, 13-24, 25+ weeks
+            intensive: [390, 370, 350, 340],  // 1-4, 5-12, 13-24, 25+ weeks
+            evening: [195, 195, 195, 195]     // Fixed price for all durations
+        };
+        
+        // Material fees per week
+        const materialFees = {
+            morning: 10,
+            semi: 15,
+            intensive: 20,
+            evening: 10
+        };
+        
+        // Fixed fees
+        const registrationFee = 170;
+        const baristaFee = 80; // fixed fee
+        const medicalEnglishFee = 20; // per week
+        const insuranceFee = 2.5; // per day
+        
+        function getPriceIndex(weeks) {
+            if (weeks <= 4) return 0;
+            if (weeks <= 12) return 1;
+            if (weeks <= 24) return 2;
+            return 3;
+        }
+        
+        function updatePrices() {
+            let weeks = parseInt(document.getElementById('weeks').value);
+            if (weeks < 1) {
+                document.getElementById('weeks').value = 1;
+                weeks = 1;
+            }
+        }
+        
+        function calculateTotal() {
+            const program = document.getElementById('program').value;
+            const weeks = parseInt(document.getElementById('weeks').value);
+            const baristaSelected = document.getElementById('barista').checked;
+            
+            // Calculate program cost
+            const priceIndex = getPriceIndex(weeks);
+            const programCost = programPrices[program][priceIndex] * weeks;
+            
+            // Calculate material fee
+            const materialCost = materialFees[program] * weeks;
+            
+            // Calculate optional services
+            const baristaCost = baristaSelected ? baristaFee : 0;
+            
+            // Calculate total
+            const totalCost = registrationFee + programCost + materialCost + baristaCost;
+            
+            // Display summary
+            let programName;
+            switch(program) {
+                case 'morning': programName = "Morning English (15 lessons/week)"; break;
+                case 'semi': programName = "Semi-Intensive English (20 lessons/week)"; break;
+                case 'intensive': programName = "Intensive English (25 lessons/week)"; break;
+                case 'evening': programName = "Evening English (10 lessons/week)"; break;
+            }
+            
+            let summaryHTML = `
+                <div class="summary-item">
+                    <span>Registration Fee:</span>
+                    <span>$${registrationFee.toFixed(2)}</span>
+                </div>
+                <div class="summary-item">
+                    <span>${programName}:</span>
+                    <span>${programPrices[program][priceIndex].toFixed(2)} × ${weeks} weeks = ${programCost.toFixed(2)}</span>
+                </div>
+                <div class="summary-item">
+                    <span>Material Fee:</span>
+                    <span>${materialFees[program].toFixed(2)} × ${weeks} weeks = ${materialCost.toFixed(2)}</span>
+                </div>
+            `;
+            
+            if (baristaSelected) {
+                summaryHTML += `
+                    <div class="summary-item">
+                        <span>Barista Elective:</span>
+                        <span>${baristaCost.toFixed(2)}</span>
+                    </div>
+                `;
+            }
+            
+
+            
+            summaryHTML += `
+                <div class="summary-item summary-total">
+                    <span>Total Cost:</span>
+                    <span>$${totalCost.toFixed(2)}</span>
+                </div>
+            `;
+            
+            document.getElementById('summaryContent').innerHTML = summaryHTML;
+            document.getElementById('quoteSummary').style.display = 'block';
+        }
+        
+        // Find the next Monday
+        function getNextMonday(date = new Date()) {
+            const dateCopy = new Date(date);
+            const dayOfWeek = dateCopy.getDay(); // 0 = Sunday, 1 = Monday, etc.
+            
+            // If today is not Monday, find the next Monday
+            if (dayOfWeek !== 1) {
+                dateCopy.setDate(dateCopy.getDate() + ((1 + 7 - dayOfWeek) % 7));
+            }
+            
+            return dateCopy;
+        }
+    </script>
+</body>
+</html>
